@@ -1,0 +1,86 @@
+﻿@page "/kingscup"
+@using Microsoft.AspNetCore.SignalR.Client
+@using BlazorSignalRApp.Shared.Games
+@inject NavigationManager NavigationManager
+@implements IAsyncDisposable
+
+<h3>KingsCup</h3>
+
+@if (!_playerAdded)
+{
+    <AddPlayer OnPlayerAdding="AddPlayer"></AddPlayer>
+}
+else
+{
+    <ul id="messageList">
+        @foreach (var player in _players)
+        {
+            <li>@player</li>
+        }
+    </ul>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div @onclick="GetNextCard"><SingleCard></SingleCard></div>
+            </div>
+            <div class="col-md-6">
+                @if (_currentCard != null)
+                {
+                    <SingleCard DisplayCard="_currentCard"></SingleCard>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    private HubConnection _hubConnection;
+    private Card _currentCard;
+    private string _thisPlayer;
+    private bool _playerAdded = false;
+    private List<string> _players = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("kingscuphub"))
+            .Build();
+
+        _hubConnection.On<List<string>>("OnGetAllPlayers", (players) =>
+        {
+            players = _players;
+        });
+
+        _hubConnection.On<string>("OnPlayerAdded", (player) =>
+        {
+            _players.Add(player);
+            StateHasChanged();
+        });
+
+        _hubConnection.On<Card>("OnReceivedNextCard", (card) =>
+        {
+            _currentCard = card;
+            StateHasChanged();
+        });
+
+        await _hubConnection.StartAsync().ConfigureAwait(false);
+    }
+
+    Task AddPlayer(string playerName)
+    {
+        _playerAdded = true;
+
+        //_hubConnection.SendAsync("GetAllPlayers").ConfigureAwait(false);
+
+        return _hubConnection.SendAsync("AddPlayer", playerName);
+    }
+
+    Task GetNextCard() => _hubConnection.SendAsync("GetNextCard");
+
+    public async ValueTask DisposeAsync()
+    {
+        await _hubConnection.DisposeAsync().ConfigureAwait(false);
+    }
+}

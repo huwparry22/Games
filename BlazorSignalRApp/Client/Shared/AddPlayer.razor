@@ -1,0 +1,17 @@
+﻿<div>
+    <div class="form-group">
+        <label>
+            Player Name:
+            <input @bind="_playerName" />
+        </label>
+    </div>
+    <button @onclick="@(() => OnPlayerAdding.InvokeAsync(_playerName))">Add Player</button>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback<string> OnPlayerAdding { get; set; }
+
+    public string _playerName;
+}

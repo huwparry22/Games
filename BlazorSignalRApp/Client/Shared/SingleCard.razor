@@ -1,0 +1,44 @@
+﻿@using BlazorSignalRApp.Shared.Games
+
+
+    <img src="@(GetCardUrl())" width="345px" height="528px" />
+
+@code {
+    [Parameter]
+    public Card DisplayCard { get; set; }
+
+    private string GetCardUrl()
+    {
+        if (DisplayCard is null)
+        {
+            return "images/cards/blue_back.png";
+        }
+
+        var face = DisplayCard.Face switch
+        {
+            Face.Ace => "A",
+            Face.Two => "2",
+            Face.Three => "3",
+            Face.Four => "4",
+            Face.Five => "5",
+            Face.Six => "6",
+            Face.Seven => "7",
+            Face.Eight => "8",
+            Face.Nine => "9",
+            Face.Ten => "10",
+            Face.Jack => "J",
+            Face.Queen => "Q",
+            Face.King => "K"
+        };
+
+        var suit = DisplayCard.Suit switch
+        {
+            Suit.Clubs => "C",
+            Suit.Diamonds => "D",
+            Suit.Hearts => "H",
+            Suit.Spades => "S"
+        };
+
+        return $"/images/cards/{face}{suit}.png";
+    }
+}
