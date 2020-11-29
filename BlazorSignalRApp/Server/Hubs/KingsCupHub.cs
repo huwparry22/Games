@@ -21,6 +21,8 @@ namespace BlazorSignalRApp.Server.Hubs
             _kingsCup.AddPlayer(playerName);
 
             await Clients.All.SendAsync("OnPlayerAdded", playerName).ConfigureAwait(false);
+
+            await SetCurrentPlayer().ConfigureAwait(false);
         }
 
         public async Task GetNextCard()
@@ -28,6 +30,13 @@ namespace BlazorSignalRApp.Server.Hubs
             var card = _kingsCup.GetNextCard();
 
             await Clients.All.SendAsync("OnReceivedNextCard", card).ConfigureAwait(false);
+
+            await SetCurrentPlayer().ConfigureAwait(false);
+        }
+
+        private async Task SetCurrentPlayer()
+        {
+            await Clients.All.SendAsync("OnSetCurrentPlayer", _kingsCup.CurrentPlayer).ConfigureAwait(false);
         }
     }
 }

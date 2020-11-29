@@ -8,10 +8,31 @@ namespace BlazorSignalRApp.Shared.Games
     {
         private List<string> _players = new List<string>();
         private List<Card> _cards;
+        private int _currentPlayerIndex = 0;
 
         public KingsCup()
         {
             _cards = Cards.GetCards();
+        }
+
+        public string CurrentPlayer
+        {
+            get
+            {
+                return _players[_currentPlayerIndex];
+            }
+        }
+
+        private void MoveToNextPlayer()
+        {
+            if (_currentPlayerIndex >= _players.Count - 1)
+            {
+                _currentPlayerIndex = 0;
+            }
+            else
+            {
+                _currentPlayerIndex++;
+            }
         }
 
         public void AddPlayer(string playerName)
@@ -31,6 +52,8 @@ namespace BlazorSignalRApp.Shared.Games
 
             var card = _cards[randomIndex];
             _cards.RemoveAt(randomIndex);
+
+            MoveToNextPlayer();
 
             return card;
         }

@@ -12,12 +12,19 @@
 }
 else
 {
-    <ul id="messageList">
-        @foreach (var player in _players)
+<ul id="messageList">
+    @foreach (var player in _players)
+    {
+        if (player == _currentPlayer)
+        {
+            <li><b>@player</b></li>
+        }
+        else
         {
             <li>@player</li>
         }
-    </ul>
+    }
+</ul>
 
     <div class="container">
         <div class="row">
@@ -39,6 +46,7 @@ else
     private HubConnection _hubConnection;
     private Card _currentCard;
     private string _thisPlayer;
+    private string _currentPlayer;
     private bool _playerAdded = false;
     private List<string> _players = new List<string>();
 
@@ -62,6 +70,12 @@ else
         _hubConnection.On<Card>("OnReceivedNextCard", (card) =>
         {
             _currentCard = card;
+            StateHasChanged();
+        });
+
+        _hubConnection.On<string>("OnSetCurrentPlayer", (currentPlayer) =>
+        {
+            _currentPlayer = currentPlayer;
             StateHasChanged();
         });
 
