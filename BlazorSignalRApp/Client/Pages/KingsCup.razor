@@ -29,7 +29,14 @@ else
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <div @onclick="GetNextCard"><SingleCard></SingleCard></div>
+                @if (_thisPlayer == _currentPlayer)
+                {
+                    <div @onclick="GetNextCard"><SingleCard></SingleCard></div>
+                }
+                else
+                {
+                    <SingleCard></SingleCard>
+                }
             </div>
             <div class="col-md-6">
                 @if (_currentCard != null)
@@ -85,6 +92,7 @@ else
     Task AddPlayer(string playerName)
     {
         _playerAdded = true;
+        _thisPlayer = playerName;
 
         //_hubConnection.SendAsync("GetAllPlayers").ConfigureAwait(false);
 
