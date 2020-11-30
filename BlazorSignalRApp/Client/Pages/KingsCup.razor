@@ -61,6 +61,7 @@ else
     {
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri("kingscuphub"))
+            .WithAutomaticReconnect()
             .Build();
 
         _hubConnection.On<List<string>>("OnGetAllPlayers", (players) =>
