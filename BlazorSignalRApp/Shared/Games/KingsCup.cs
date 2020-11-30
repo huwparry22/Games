@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BlazorSignalRApp.Shared.Games
@@ -9,19 +10,16 @@ namespace BlazorSignalRApp.Shared.Games
         private List<string> _players = new List<string>();
         private List<Card> _cards;
         private int _currentPlayerIndex = 0;
+        private Card _currentCard;
 
         public KingsCup()
         {
             _cards = Cards.GetCards();
         }
 
-        public string CurrentPlayer
-        {
-            get
-            {
-                return _players[_currentPlayerIndex];
-            }
-        }
+        public string CurrentPlayer => _players[_currentPlayerIndex];
+
+        public Card CurrentCard => _currentCard;
 
         private void MoveToNextPlayer()
         {
@@ -35,9 +33,16 @@ namespace BlazorSignalRApp.Shared.Games
             }
         }
 
-        public void AddPlayer(string playerName)
+        public string AddPlayer(string playerName)
         {
+            if (_players.Any(p => p.Trim().Equals(playerName.Trim(), StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return $"Player {playerName} already added.";
+            }
+
             _players.Add(playerName);
+
+            return null;
         }
 
         public List<string> GetAllPlayers()
@@ -45,17 +50,15 @@ namespace BlazorSignalRApp.Shared.Games
             return _players;
         }
 
-        public Card GetNextCard()
+        public void SetNextCard()
         {
             var random = new Random();
             int randomIndex = random.Next(0, _cards.Count - 1);
 
-            var card = _cards[randomIndex];
+            _currentCard = _cards[randomIndex];
             _cards.RemoveAt(randomIndex);
 
             MoveToNextPlayer();
-
-            return card;
         }
     }
 }

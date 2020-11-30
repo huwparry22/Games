@@ -1,10 +1,18 @@
 ﻿@page "/kingscup"
 @using Microsoft.AspNetCore.SignalR.Client
 @using BlazorSignalRApp.Shared.Games
+@using BlazorSignalRApp.Shared.Models
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
 <h3>KingsCup</h3>
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @_errorMessage
+    </div>
+}
 
 @if (!_playerAdded)
 {
@@ -12,19 +20,19 @@
 }
 else
 {
-<ul id="messageList">
-    @foreach (var player in _players)
-    {
-        if (player == _currentPlayer)
+    <ul id="messageList">
+        @foreach (var player in _players)
         {
-            <li><b>@player</b></li>
+            if (player == _currentPlayer)
+            {
+                <li><b>@player</b></li>
+            }
+            else
+            {
+                <li>@player</li>
+            }
         }
-        else
-        {
-            <li>@player</li>
-        }
-    }
-</ul>
+    </ul>
 
     <div class="container">
         <div class="row">
@@ -49,12 +57,13 @@ else
 }
 
 @code {
+    private string _thisPlayer;
+    private bool _playerAdded = false;
 
+    private string _errorMessage;
     private HubConnection _hubConnection;
     private Card _currentCard;
-    private string _thisPlayer;
     private string _currentPlayer;
-    private bool _playerAdded = false;
     private List<string> _players = new List<string>();
 
     protected override async Task OnInitializedAsync()
@@ -64,41 +73,35 @@ else
             .WithAutomaticReconnect()
             .Build();
 
-        _hubConnection.On<List<string>>("OnGetAllPlayers", (players) =>
+        _hubConnection.On<string>("OnPlayerAdded", (playerName) =>
         {
-            players = _players;
-        });
+            _playerAdded = true;
+            _thisPlayer = playerName;
 
-        _hubConnection.On<string>("OnPlayerAdded", (player) =>
-        {
-            _players.Add(player);
             StateHasChanged();
         });
 
-        _hubConnection.On<Card>("OnReceivedNextCard", (card) =>
+        _hubConnection.On<KingsCupModel>("OnKingsCupUpdated", (model) =>
         {
-            _currentCard = card;
+            _errorMessage = model.ErrorMessage;
+            _players = model.Players;
+            _currentPlayer = model.CurrentPlayer;
+            _currentCard = model.CurrentCard;
+
             StateHasChanged();
         });
 
-        _hubConnection.On<string>("OnSetCurrentPlayer", (currentPlayer) =>
+        _hubConnection.On<string>("OnError", (errorMessage) =>
         {
-            _currentPlayer = currentPlayer;
+            _errorMessage = errorMessage;
+
             StateHasChanged();
         });
 
         await _hubConnection.StartAsync().ConfigureAwait(false);
     }
 
-    Task AddPlayer(string playerName)
-    {
-        _playerAdded = true;
-        _thisPlayer = playerName;
-
-        //_hubConnection.SendAsync("GetAllPlayers").ConfigureAwait(false);
-
-        return _hubConnection.SendAsync("AddPlayer", playerName);
-    }
+    Task AddPlayer(string playerName) => _hubConnection.SendAsync("AddPlayer", playerName);
 
     Task GetNextCard() => _hubConnection.SendAsync("GetNextCard");
 
