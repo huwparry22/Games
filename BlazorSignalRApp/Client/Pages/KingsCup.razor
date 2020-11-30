@@ -36,7 +36,7 @@ else
 
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col">
                 @if (_thisPlayer == _currentPlayer)
                 {
                     <div @onclick="GetNextCard"><SingleCard></SingleCard></div>
@@ -46,7 +46,7 @@ else
                     <SingleCard></SingleCard>
                 }
             </div>
-            <div class="col-md-6">
+            <div class="col">
                 @if (_currentCard != null)
                 {
                     <SingleCard DisplayCard="_currentCard"></SingleCard>
