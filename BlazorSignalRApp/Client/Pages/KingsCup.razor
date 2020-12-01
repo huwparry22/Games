@@ -20,9 +20,13 @@
 }
 else
 {
-    <Players AllPlayers="_players" CurrentPlayer="@(_currentPlayer)"></Players>
-
     <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-auto text-right">
+                <Players AllPlayers="_players" CurrentPlayer="@(_currentPlayer)"></Players>
+            </div>
+        </div>
         <div class="row">
             <div class="col">
                 @if (_thisPlayer == _currentPlayer)
