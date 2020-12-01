@@ -1,0 +1,25 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-sm-2">
+            <a class="btn btn-primary" data-toggle="collapse" href="#row-allplayers" role="button" aria-expanded="false" aria-controls="row-allplayers">See all players</a>
+        </div>
+    </div>
+    <div class="row collapse" id="row-allplayers">
+        <div class="col-sm-2">
+            <ul class="list-group">
+                @foreach (var player in AllPlayers)
+                {
+                    <li class="list-group-item @(player == CurrentPlayer ? "active" : "")">@player</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public List<string> AllPlayers { get; set; }
+
+    [Parameter]
+    public string CurrentPlayer { get; set; }
+}

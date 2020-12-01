@@ -20,19 +20,7 @@
 }
 else
 {
-    <ul id="messageList">
-        @foreach (var player in _players)
-        {
-            if (player == _currentPlayer)
-            {
-                <li><b>@player</b></li>
-            }
-            else
-            {
-                <li>@player</li>
-            }
-        }
-    </ul>
+    <Players AllPlayers="_players" CurrentPlayer="@(_currentPlayer)"></Players>
 
     <div class="container">
         <div class="row">
