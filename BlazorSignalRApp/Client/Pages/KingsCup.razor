@@ -65,6 +65,11 @@ else
             .WithAutomaticReconnect()
             .Build();
 
+        _hubConnection.Reconnecting += exception =>
+        {
+            return _hubConnection.SendAsync("GetCurrentGameState");
+        };
+
         _hubConnection.On<string>("OnPlayerAdded", (playerName) =>
         {
             _playerAdded = true;

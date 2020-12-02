@@ -50,6 +50,11 @@ namespace BlazorSignalRApp.Server.Hubs
         //    await Clients.All.SendAsync("OnSetCurrentPlayer", _kingsCup.CurrentPlayer).ConfigureAwait(false);
         //}
 
+        public async Task GetCurrentGameState()
+        {
+            await ReturnKingsCupGame().ConfigureAwait(false);
+        }
+
         private async Task ReturnKingsCupGame()
         {
             var model = new KingsCupModel
