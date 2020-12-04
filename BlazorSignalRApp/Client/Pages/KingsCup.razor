@@ -62,7 +62,7 @@ else
     {
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(NavigationManager.ToAbsoluteUri("kingscuphub"))
-            .WithAutomaticReconnect()
+            .WithAutomaticReconnect(new[] { TimeSpan.Zero, TimeSpan.Zero, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5) })
             .Build();
 
         _hubConnection.Reconnecting += exception =>
