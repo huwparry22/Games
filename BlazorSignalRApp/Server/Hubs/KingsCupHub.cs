@@ -16,10 +16,6 @@ namespace BlazorSignalRApp.Server.Hubs
         {
             var errorMessage = _kingsCup.AddPlayer(playerName);
 
-            //await Clients.All.SendAsync("OnPlayerAdded", playerName).ConfigureAwait(false);
-
-            //await SetCurrentPlayer().ConfigureAwait(false);
-
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 await Clients.All.SendAsync("OnError", errorMessage).ConfigureAwait(false);
@@ -34,21 +30,10 @@ namespace BlazorSignalRApp.Server.Hubs
 
         public async Task GetNextCard()
         {
-            //var card = _kingsCup.GetNextCard();
-
-            //await Clients.All.SendAsync("OnReceivedNextCard", card).ConfigureAwait(false);
-
-            //await SetCurrentPlayer().ConfigureAwait(false);
-
             _kingsCup.SetNextCard();
 
             await ReturnKingsCupGame().ConfigureAwait(false);
         }
-
-        //private async Task SetCurrentPlayer()
-        //{
-        //    await Clients.All.SendAsync("OnSetCurrentPlayer", _kingsCup.CurrentPlayer).ConfigureAwait(false);
-        //}
 
         public async Task GetCurrentGameState()
         {

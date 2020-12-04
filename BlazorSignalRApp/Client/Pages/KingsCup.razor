@@ -67,7 +67,23 @@ else
 
         _hubConnection.Reconnecting += exception =>
         {
+            _errorMessage = "Reconnecting...";
+
+            return Task.CompletedTask;
+        };
+
+        _hubConnection.Reconnected += connectionId =>
+        {
+            _errorMessage = string.Empty;
+
             return _hubConnection.SendAsync("GetCurrentGameState");
+        };
+
+        _hubConnection.Closed += exception =>
+        {
+            _errorMessage = "Connection lost!";
+
+            return Task.CompletedTask;
         };
 
         _hubConnection.On<string>("OnPlayerAdded", (playerName) =>
