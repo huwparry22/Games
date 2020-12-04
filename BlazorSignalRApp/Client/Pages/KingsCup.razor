@@ -3,6 +3,7 @@
 @using BlazorSignalRApp.Shared.Games
 @using BlazorSignalRApp.Shared.Models
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 @implements IAsyncDisposable
 
 <h3>KingsCup</h3>
@@ -53,7 +54,7 @@ else
     private bool _playerAdded = false;
 
     private string _errorMessage;
-    private HubConnection _hubConnection;
+    private static HubConnection _hubConnection;
     private Card _currentCard;
     private string _currentPlayer;
     private List<string> _players = new List<string>();
@@ -121,5 +122,11 @@ else
     public async ValueTask DisposeAsync()
     {
         await _hubConnection.DisposeAsync().ConfigureAwait(false);
+    }
+
+    [JSInvokable]
+    public static Task OnVisibilityChanged()
+    {
+        return _hubConnection.SendAsync("GetCurrentGameState");
     }
 }
