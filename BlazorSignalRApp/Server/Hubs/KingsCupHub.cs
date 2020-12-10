@@ -19,6 +19,8 @@ namespace BlazorSignalRApp.Server.Hubs
                 var playerName = Context.User.Identities.First(i => !string.IsNullOrWhiteSpace(i.Label)).Label;
 
                 await RemovePlayer(playerName).ConfigureAwait(false);
+
+                await SetInfoMessage($"{playerName} has left the game.").ConfigureAwait(false);
             }
 
             await base.OnDisconnectedAsync(exception);
@@ -40,6 +42,8 @@ namespace BlazorSignalRApp.Server.Hubs
                 {
                     Label = playerName
                 });
+
+                await SetInfoMessage($"{playerName} has been added to the game.").ConfigureAwait(false);
 
                 await ReturnKingsCupGame().ConfigureAwait(false);
             }
@@ -84,6 +88,11 @@ namespace BlazorSignalRApp.Server.Hubs
         private async Task SetErrorMessage(string errorMessage)
         {
             await Clients.All.SendAsync("OnError", errorMessage).ConfigureAwait(false);
+        }
+
+        private async Task SetInfoMessage(string infoMessage)
+        {
+            await Clients.All.SendAsync("OnInfo", infoMessage).ConfigureAwait(false);
         }
     }
 }
