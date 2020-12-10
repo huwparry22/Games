@@ -25,7 +25,6 @@
     <script type="text/javascript">
         function VisibilityChanged() {
             if (!document.hidden) {
-                //alert('hiya');
                 DotNet.invokeMethodAsync('BlazorSignalRApp.Client', 'OnVisibilityChanged');
             }
         }

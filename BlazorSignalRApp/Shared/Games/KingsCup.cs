@@ -45,6 +45,20 @@ namespace BlazorSignalRApp.Shared.Games
             return null;
         }
 
+        public string RemovePlayer(string playerName)
+        {
+            if (!_players.Any(p => p.Trim().Equals(playerName.Trim(), StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return $"Player {playerName} not in this game.";
+            }
+
+            _players.Remove(playerName.Trim());
+
+            MoveToNextPlayer();
+
+            return null;
+        }
+
         public List<string> GetAllPlayers()
         {
             return _players;
