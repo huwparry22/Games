@@ -76,7 +76,8 @@ namespace BlazorSignalRApp.Server.Hubs
             {
                 Players = _kingsCup.GetAllPlayers(),
                 CurrentPlayer = _kingsCup.CurrentPlayer,
-                CurrentCard = _kingsCup.CurrentCard
+                CurrentCard = _kingsCup.CurrentCard,
+                CardsLeft = _kingsCup.CardsLeft
             };
 
             await Clients.All.SendAsync("OnKingsCupUpdated", model).ConfigureAwait(false);

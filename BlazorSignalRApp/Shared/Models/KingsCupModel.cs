@@ -15,5 +15,7 @@ namespace BlazorSignalRApp.Shared.Models
         public string CurrentPlayer { get; set; }
 
         public Card CurrentCard { get; set; }
+
+        public int CardsLeft { get; set; }
     }
 }

@@ -74,5 +74,7 @@ namespace BlazorSignalRApp.Shared.Games
 
             MoveToNextPlayer();
         }
+
+        public int CardsLeft => _cards.Count;
     }
 }

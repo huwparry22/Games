@@ -24,7 +24,9 @@ else
 {
     <div class="container">
         <div class="row">
-            <div class="col"></div>
+            <div class="col">
+                <span>Cards left: @(_cardsLeft.ToString())</span>
+            </div>
             <div class="col-auto text-right">
                 <Players AllPlayers="_players" CurrentPlayer="@(_currentPlayer)"></Players>
             </div>
@@ -59,6 +61,7 @@ else
     private Card _currentCard;
     private string _currentPlayer;
     private List<string> _players = new List<string>();
+    private int _cardsLeft;
 
     protected override async Task OnInitializedAsync()
     {
@@ -102,6 +105,7 @@ else
             _players = model.Players;
             _currentPlayer = model.CurrentPlayer;
             _currentCard = model.CurrentCard;
+            _cardsLeft = model.CardsLeft;
 
             StateHasChanged();
         });
