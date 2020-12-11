@@ -16,7 +16,7 @@ namespace BlazorSignalRApp.Server.Hubs
         {
             if (exception is null)
             {
-                var playerName = Context.User.Identities.First(i => !string.IsNullOrWhiteSpace(i.Label)).Label;
+                var playerName = Context.Items.First(i => i.Key.ToString() == "PlayerName").Value.ToString();
 
                 await RemovePlayer(playerName).ConfigureAwait(false);
 
@@ -38,10 +38,7 @@ namespace BlazorSignalRApp.Server.Hubs
             {
                 await Clients.Caller.SendAsync("OnPlayerAdded", playerName).ConfigureAwait(false);
 
-                Context.User.AddIdentity(new System.Security.Claims.ClaimsIdentity
-                {
-                    Label = playerName
-                });
+                Context.Items.Add("PlayerName", playerName);
 
                 await SetInfoMessage($"{playerName} has been added to the game.").ConfigureAwait(false);
 
