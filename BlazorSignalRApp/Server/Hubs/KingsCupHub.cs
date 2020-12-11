@@ -16,18 +16,11 @@ namespace BlazorSignalRApp.Server.Hubs
         {
             if (exception is null)
             {
-                try
-                {
-                    var playerName = Context.User.Identities.First(i => !string.IsNullOrWhiteSpace(i.Label)).Label;
+                var playerName = Context.User.Identities.First(i => !string.IsNullOrWhiteSpace(i.Label)).Label;
 
-                    await RemovePlayer(playerName).ConfigureAwait(false);
+                await RemovePlayer(playerName).ConfigureAwait(false);
 
-                    await SetInfoMessage($"{playerName} has left the game.").ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    await SetInfoMessage(ex.Message).ConfigureAwait(false);
-                }
+                await SetInfoMessage($"{playerName} has left the game.").ConfigureAwait(false);
             }
 
             await base.OnDisconnectedAsync(exception);
